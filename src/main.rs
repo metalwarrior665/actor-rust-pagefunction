@@ -18,9 +18,14 @@ async fn main() {
     println!("wrote page_function to ./dyn/src/lib.rs");
 
     // cargo build --manifest-path=./dyn/Cargo.toml
-    let output = Command::new("cargo")
+    let mut build_command = Command::new("cargo");
+
+    if input.build_type == "release" {
+        build_command.arg("--release");
+    }
+    let output = 
+        build_command
         .arg("build")
-        .arg(format!("--{}", input.build_type))
         .arg("--manifest-path=./dyn/Cargo.toml")
         .output()
         .expect("failed to execute process");
@@ -34,6 +39,7 @@ async fn main() {
             "linux" => format!("dyn/target/{}/liblibrary.so", build_type),
             _ => panic!("Unsupported OS"),
         };
+        println!("loading dynamic library from path: {}", library_path);
         unsafe {
             let lib = libloading::Library::new(library_path)?;
     

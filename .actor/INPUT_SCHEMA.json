@@ -15,7 +15,7 @@
             "title": "Page Function",
             "type": "string",
             "description": "world",
-            "prefill": "use serde_json::{Value,json};\n\n#[no_mangle]\npub fn page_function (a: i32, b: i32) -> Value { \n    println!(\"inside pageFunction\");\n    let output = json!({ \"result\": a + b});\n    println!(\"inside pageFunction output: {:?}\", output);\n    output\n}",
+            "prefill": "use serde_json::{Value,json};\nuse scraper::{Html, Selector};\n\nfn selector_to_text(document: &Html, selector: &str) -> Option<String> {\n    document\n        .select(&Selector::parse(selector).unwrap())\n        .next()\n        .map(|el| el.text().next().unwrap().into() )\n}\n#[no_mangle]\npub fn page_function (document: Html) -> Value { \n    println!(\"page_function starting\");\n\n    let title = selector_to_text(&document, \"title\");\n    println!(\"extracted title: {:?}\", title);\n\n    let header = selector_to_text(&document, \"h1\");\n    println!(\"extracted header: {:?}\", header);\n\n    let companies_using_apify = document\n        .select(&Selector::parse(\".Logos__container\").unwrap())\n        .next().unwrap()\n        .select(&Selector::parse(\"img\").unwrap())\n        .map(|el| el.value().attr(\"alt\").unwrap().to_string())\n        .collect::<Vec<String>>();\n\n    println!(\"extracted companies_using_apify: {:?}\", companies_using_apify);\n\n    let output = json!({\n        \"title\": title,\n        \"header\": header,\n        \"companies_using_apify\": companies_using_apify,\n    });\n    println!(\"inside pageFunction output: {:?}\", output);\n    output\n}",
             "editor": "textarea"
         },
         "build_type": {
@@ -30,7 +30,8 @@
                 "Release (slow start, faster long-term)"
             ],
             "description": "hello",
-            "editor": "select"
+            "editor": "select",
+            "default": "debug"
         }
     }
 }
