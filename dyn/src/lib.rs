@@ -1,10 +1,9 @@
-use rand::Rng;
+use serde_json::{Value,json};
 
 #[no_mangle]
-pub fn sum (a: i32, b: i32) -> i32 { 
-   println!("inside callee");
-let mut rng = rand::thread_rng();
-let num = rng.gen::<i32>();
-println!("inside callee, random path: {}", num);
-a + b
+pub fn page_function (a: i32, b: i32) -> Value { 
+    println!("inside pageFunction");
+    let output = json!({ "result": a + b});
+    println!("inside pageFunction output: {:?}", output);
+    output
 }

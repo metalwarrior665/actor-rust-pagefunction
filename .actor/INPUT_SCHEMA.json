@@ -1,0 +1,15 @@
+{
+    "title": "Google Search Scraper input",
+    "description": "Export valid Rust function",
+    "type": "object",
+    "schemaVersion": 1.0,
+    "properties": {
+        "page_function": {
+            "title": "Page Function",
+            "type": "string",
+            "description": "sdfs",
+            "prefill": "use serde_json::{Value,json};\n\n#[no_mangle]\npub fn page_function (a: i32, b: i32) -> Value { \n    println!(\"inside pageFunction\");\n    let output = json!({ \"result\": a + b});\n    println!(\"inside pageFunction output: {:?}\", output);\n    output\n}",
+            "editor": "textarea"
+        }
+    }
+}

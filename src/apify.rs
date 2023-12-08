@@ -6,7 +6,7 @@ use rand::Rng;
 
 #[derive(Debug, Deserialize)]
 pub struct Input {
-    pub pageFunction: String,
+    pub page_function: String,
 }
 
 pub fn get_is_on_apify() -> bool {
@@ -55,7 +55,7 @@ pub async fn push_data (data: Vec<Value>, client: &reqwest::Client, force_cloud:
         for val in data.iter() {
             let json = serde_json::to_string(&val)?;
             let mut rng = rand::thread_rng();
-            let path = format!("apify_storage/datasets/default/{}.json", rng.gen::<i32>());
+            let path = format!("storage/datasets/default/{}.json", rng.gen::<i32>());
             fs::write(path, json)?;
         } 
     }
