@@ -29,14 +29,14 @@ async fn main() {
     println!("compiled into dynamic library error: {:?}", String::from_utf8(output.stderr).unwrap());
 
     fn call_dynamic(document: Html, build_type: String) -> Result<Value, Box<dyn std::error::Error>> {
+        let library_path = match std::env::consts::OS {
+            "macos" => format!("dyn/target/{}/liblibrary.dylib", build_type),
+            "linux" => format!("dyn/target/{}/liblibrary.so", build_type),
+            _ => panic!("Unsupported OS"),
+        };
         unsafe {
-            let lib = match libloading::Library::new(format!("dyn/target/{}/liblibrary.dylib", build_type)) {
-                Ok(lib) => lib,
-                Err(e) => {
-                    println!("Cannot find dyn/target/release/liblibrary.dylib, will try .so");
-                    libloading::Library::new("dyn/target/release/liblibrary.so").unwrap()
-                },
-            };
+            let lib = libloading::Library::new(library_path)?;
+    
             let func: libloading::Symbol<unsafe extern fn(Html) -> Value> = lib.get(b"page_function")?;
             Ok(func(document))
         }
