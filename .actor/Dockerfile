@@ -1,5 +1,7 @@
 FROM rust:1
 
+RUN cargo -V
+
 COPY . .
 
 RUN cargo build --release
