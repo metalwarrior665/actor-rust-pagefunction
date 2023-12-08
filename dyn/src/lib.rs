@@ -7,14 +7,10 @@ fn selector_to_text(document: &Html, selector: &str) -> Option<String> {
         .next()
         .map(|el| el.text().next().unwrap().into() )
 }
+
 #[no_mangle]
-pub fn page_function (html: &String) -> Value { 
+pub fn page_function (document: &Html) -> Value { 
     println!("page_function starting");
-
-    let contains_apify = html.contains("apify");
-    println!("page_function contains_apify: {:?}", contains_apify);
-
-    let document = Html::parse_document(&html);
 
     let title = selector_to_text(&document, "title");
     println!("extracted title: {:?}", title);

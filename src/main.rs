@@ -7,7 +7,7 @@ use std::process::Command;
 use crate::apify::{get_value,push_data};
 use serde_json::Value;
 use reqwest::Client;
-// use scraper::{Html};
+use scraper::{Html};
 
 #[tokio::main]
 async fn main() {
@@ -34,7 +34,7 @@ async fn main() {
     println!("compiled into dynamic library output: {:?}", String::from_utf8(output.stdout).unwrap());
     println!("compiled into dynamic library error: {:?}", String::from_utf8(output.stderr).unwrap());
 
-    fn call_dynamic(html: &String, build_type: String) -> Result<Value, Box<dyn std::error::Error>> {
+    fn call_dynamic(document: &Html, build_type: String) -> Result<Value, Box<dyn std::error::Error>> {
         let library_path = match std::env::consts::OS {
             "macos" => format!("dyn/target/{}/liblibrary.dylib", build_type),
             "linux" => format!("dyn/target/{}/liblibrary.so", build_type),
@@ -44,8 +44,8 @@ async fn main() {
         unsafe {
             let lib = libloading::Library::new(library_path)?;
     
-            let func: libloading::Symbol<unsafe extern fn(&String) -> Value> = lib.get(b"page_function")?;
-            Ok(func(html))
+            let func: libloading::Symbol<unsafe extern fn(&Html) -> Value> = lib.get(b"page_function")?;
+            Ok(func(document))
         }
     }
 
@@ -53,9 +53,9 @@ async fn main() {
 
     let response = client.get(input.url).send().await.unwrap();
     let html = response.text().await.unwrap();
-    // let document = Html::parse_document(&html);
+    let document = Html::parse_document(&html);
 
-    let page_function_output = call_dynamic(&html, input.build_type).unwrap();
+    let page_function_output = call_dynamic(&document, input.build_type).unwrap();
     println!("page_function finished with result: {:?}", page_function_output );
 
     // wrap to array if it's not already
