@@ -8,8 +8,10 @@ fn selector_to_text(document: &Html, selector: &str) -> Option<String> {
         .map(|el| el.text().next().unwrap().into() )
 }
 #[no_mangle]
-pub fn page_function (document: Html) -> Value { 
+pub fn page_function (html: String) -> Value { 
     println!("page_function starting");
+
+    let document = Html::parse_document(&html);
 
     let title = selector_to_text(&document, "title");
     println!("extracted title: {:?}", title);
