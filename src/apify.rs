@@ -8,6 +8,7 @@ use rand::Rng;
 pub struct Input {
     pub url: String,
     pub page_function: String,
+    pub build_type: String,
 }
 
 pub fn get_is_on_apify() -> bool {

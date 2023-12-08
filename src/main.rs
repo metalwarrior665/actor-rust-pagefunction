@@ -20,7 +20,7 @@ async fn main() {
     // cargo build --manifest-path=./dyn/Cargo.toml
     let output = Command::new("cargo")
         .arg("build")
-        .arg("--release")
+        .arg(format!("--{}", input.build_type))
         .arg("--manifest-path=./dyn/Cargo.toml")
         .output()
         .expect("failed to execute process");
@@ -28,9 +28,9 @@ async fn main() {
     println!("compiled into dynamic library output: {:?}", String::from_utf8(output.stdout).unwrap());
     println!("compiled into dynamic library error: {:?}", String::from_utf8(output.stderr).unwrap());
 
-    fn call_dynamic(document: Html) -> Result<Value, Box<dyn std::error::Error>> {
+    fn call_dynamic(document: Html, build_type: String) -> Result<Value, Box<dyn std::error::Error>> {
         unsafe {
-            let lib = match libloading::Library::new("dyn/target/release/liblibrary.dylib") {
+            let lib = match libloading::Library::new(format!("dyn/target/{}/liblibrary.dylib", build_type)) {
                 Ok(lib) => lib,
                 Err(e) => {
                     println!("Cannot find dyn/target/release/liblibrary.dylib, will try .so");
@@ -48,7 +48,7 @@ async fn main() {
     let html = response.text().await.unwrap();
     let document = Html::parse_document(&html);
 
-    let page_function_output = call_dynamic(document).unwrap();
+    let page_function_output = call_dynamic(document, input.build_type).unwrap();
     println!("page_function finished with result: {:?}", page_function_output );
 
     // wrap to array if it's not already
