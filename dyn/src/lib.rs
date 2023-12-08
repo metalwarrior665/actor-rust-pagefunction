@@ -8,7 +8,7 @@ fn selector_to_text(document: &Html, selector: &str) -> Option<String> {
         .map(|el| el.text().next().unwrap().into() )
 }
 #[no_mangle]
-pub fn page_function (html: String) -> Value { 
+pub fn page_function (html: &String) -> Value { 
     println!("page_function starting");
 
     let contains_apify = html.contains("apify");
