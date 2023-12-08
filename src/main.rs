@@ -20,12 +20,13 @@ async fn main() {
     // cargo build --manifest-path=./dyn/Cargo.toml
     let mut build_command = Command::new("cargo");
 
+    build_command.arg("build");
+
     if input.build_type == "release" {
         build_command.arg("--release");
     }
     let output = 
         build_command
-        .arg("build")
         .arg("--manifest-path=./dyn/Cargo.toml")
         .output()
         .expect("failed to execute process");
