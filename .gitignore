@@ -1,0 +1,5 @@
+**/target
+# Added by Apify CLI
+storage
+node_modules
+.venv
