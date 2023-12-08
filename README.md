@@ -4,7 +4,7 @@ Example actor showcasing running a user-provided function in a static-typed comp
 1. Reads the input from disk or via Apify API
 2. Extracts the `page_function` string from the input
 3. Stores the `page_function` string to the disk
-4. Spawns a system process using `cargo` to compile the `page_function` into a C dynamic library (Rust doesn't have stable ABI so C ABI must be used)
+4. Spawns a system process using `cargo` to compile the `page_function` into a dynamic library 
 5. Dynamically links the library and converts the `page_function` into a regular Rust function. It must adhere to predefined input/output types. 
 6. The example code gets HTML from the input provided `url` and parses it into a `document` using the [Scraper](https://docs.rs/scraper/latest/scraper/) library 
 7. The user-provided `page_function` gets the `document` as an input parameter and returns a JSON [Value](https://docs.rs/serde_json/latest/serde_json/enum.Value.html) type using the `json` macro
