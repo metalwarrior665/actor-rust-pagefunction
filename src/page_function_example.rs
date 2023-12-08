@@ -11,6 +11,9 @@ fn selector_to_text(document: &Html, selector: &str) -> Option<String> {
 pub fn page_function (html: String) -> Value { 
     println!("page_function starting");
 
+    let contains_apify = html.contains("apify");
+    println!("page_function contains_apify: {:?}", contains_apify);
+
     let document = Html::parse_document(&html);
 
     let title = selector_to_text(&document, "title");
