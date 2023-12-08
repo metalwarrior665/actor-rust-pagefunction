@@ -20,8 +20,6 @@ pub fn page_function (document: Html) -> Value {
         .select(&Selector::parse("img").unwrap())
         .map(|el| el.value().attr("alt").unwrap().to_string())
         .collect::<Vec<String>>();
-        // .map(|el| el.text().next().unwrap().into() )
-
     let output = json!({
         "title": title,
         "header": header,

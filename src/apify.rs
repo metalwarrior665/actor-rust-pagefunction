@@ -6,6 +6,7 @@ use rand::Rng;
 
 #[derive(Debug, Deserialize)]
 pub struct Input {
+    pub url: String,
     pub page_function: String,
 }
 
