@@ -55,6 +55,8 @@ async fn main() {
     let html = response.text().await.unwrap();
     let document = Html::parse_document(&html);
 
+    // We have to pass in a document or HTML string as reference, then it works on Apify
+    // If we move those by value, it works locally on my mac but segfaults on Apify
     let page_function_output = call_dynamic(&document, input.build_type).unwrap();
     println!("page_function finished with result: {:?}", page_function_output );
 

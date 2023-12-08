@@ -26,8 +26,9 @@ fn selector_to_text(document: &Html, selector: &str) -> Option<String> {
         .next()
         .map(|el| el.text().next().unwrap().into() )
 }
+
 #[no_mangle]
-pub fn page_function (document: Html) -> Value { 
+pub fn page_function (document: &Html) -> Value { 
     println!("page_function starting");
 
     let title = selector_to_text(&document, "title");
